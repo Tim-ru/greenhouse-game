@@ -12,7 +12,7 @@ public class HoseEquipment : MonoBehaviour
     [SerializeField] private float hoseRange = 8f; // Дальность шланга
     [SerializeField] private LayerMask moldMask = 1 << 6; // Слой объектов с плесенью (слой 6)
     [SerializeField] private float paintInterval = 0.01f; // Интервал между стираниями
-    [SerializeField] private int waterConsumption = 1; // Расход воды за стирание
+    [SerializeField] private float waterConsumption = 0.5f; // Расход воды за стирание
     
     [Header("Visual Settings")]
     [SerializeField] private Sprite hoseSprite; // Спрайт шланга в руках
