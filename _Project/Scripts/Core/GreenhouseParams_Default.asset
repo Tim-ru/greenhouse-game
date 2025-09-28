@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 995d0f6544a4d4f8297efe4ec89fe273, type: 3}
+  m_Name: GreenhouseParams_Default
+  m_EditorClassIdentifier: Assembly-CSharp::GreenhouseParams
+  temperatureComfort: {x: 20, y: 24}
+  humidityComfort: {x: 0.45, y: 0.65}
+  temperatureDrift: -0.05
+  humidityDrift: -0.01
+  dirtAccumulation: 0.01
+  baseLight: 1
+  oxygenProductionRate: 0.02
+  oxygenConsumptionRate: 0.01
