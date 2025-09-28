@@ -73,16 +73,14 @@ public class CameraTrigger : MonoBehaviour
     
     private void OnTriggerExit2D(Collider2D other)
     {
-        // Опционально: можно добавить логику при выходе из зоны
-        // Например, возврат камеры в центр
         if (requirePlayerTag && !other.CompareTag(playerTag))
             return;
         
-        // Раскомментируйте, если хотите возвращать камеру в центр при выходе
-        // if (cameraController != null)
-        // {
-        //     cameraController.MoveToCenter();
-        // }
+        // Возвращаем камеру в центр при выходе из зоны
+        if (cameraController != null)
+        {
+            cameraController.MoveToCenter();
+        }
     }
     
     /// <summary>

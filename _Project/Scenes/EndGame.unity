@@ -129,7 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 313489064}
   - component: {fileID: 313489066}
-  - component: {fileID: 313489065}
+  - component: {fileID: 313489067}
   m_Layer: 0
   m_Name: White cloudt (1)
   m_TagString: Untagged
@@ -152,19 +152,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1087156576}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &313489065
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 313489063}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b3d9c013b2044c60970514ccd4ed964, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CloudMoving
-  speed: 0
 --- !u!212 &313489066
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -223,6 +210,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &313489067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313489063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a008e1589ac0347a88984df077f70f02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CloudMoving
+  speed: 1
+  leftBorder: -2.67
+  rightBorder: 3.45
 --- !u!1 &629424738
 GameObject:
   m_ObjectHideFlags: 0
