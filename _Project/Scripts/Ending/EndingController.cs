@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Контроллер экрана завершения игры
@@ -8,19 +9,10 @@ public class EndingController : MonoBehaviour
 {
     [Header("References")]
     public GoalManager goalManager;
-    public Canvas endingCanvas;
-    public JournalStub journal;
     
     [Header("Settings")]
     public float holdTime = 2f;
-    public string endingText = "Жизнь возвращается";
     
-    [Header("UI Elements")]
-    public Text endingTextUI;
-    public Button restartButton;
-    public Button quitButton;
-    
-    private float t;
     private bool endingTriggered = false;
     
     void Start()
@@ -40,28 +32,6 @@ public class EndingController : MonoBehaviour
         else
         {
             Debug.LogWarning("[EndingController] GoalManager not found!");
-        }
-        
-        // Инициализируем UI
-        if (endingCanvas != null)
-        {
-            endingCanvas.enabled = false;
-        }
-        
-        if (endingTextUI != null)
-        {
-            endingTextUI.text = endingText;
-        }
-        
-        // Настраиваем кнопки
-        if (restartButton != null)
-        {
-            restartButton.onClick.AddListener(RestartGame);
-        }
-        
-        if (quitButton != null)
-        {
-            quitButton.onClick.AddListener(QuitGame);
         }
         
         Debug.Log("[EndingController] Ending controller initialized");
@@ -107,57 +77,20 @@ public class EndingController : MonoBehaviour
         
         endingTriggered = true;
         
-        if (endingCanvas != null)
-        {
-            endingCanvas.enabled = true;
-        }
+        // Загружаем сцену титров
+        SceneManager.LoadScene("EndGame");
         
-        // Останавливаем время
-        Time.timeScale = 0f;
-        
-        // Отключаем этот скрипт
-        enabled = false;
-        
-        Debug.Log("[EndingController] Game ending triggered!");
+        Debug.Log("[EndingController] Loading EndGame scene!");
     }
     
-    /// <summary>
-    /// Перезапускает игру
-    /// </summary>
-    public void RestartGame()
-    {
-        // Восстанавливаем время
-        Time.timeScale = 1f;
-        
-        // Перезагружаем сцену
-        UnityEngine.SceneManagement.SceneManager.LoadScene(
-            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
-        );
-        
-        Debug.Log("[EndingController] Game restarted");
-    }
     
     /// <summary>
-    /// Выходит из игры
+    /// Принудительно загружает сцену титров (для тестирования)
     /// </summary>
-    public void QuitGame()
+    [ContextMenu("Force Load EndGame Scene")]
+    public void ForceLoadEndGameScene()
     {
-        Debug.Log("[EndingController] Quitting game");
-        
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
-            Application.Quit();
-        #endif
-    }
-    
-    /// <summary>
-    /// Принудительно показывает экран завершения (для тестирования)
-    /// </summary>
-    [ContextMenu("Force Show Ending")]
-    public void ForceShowEnding()
-    {
-        TriggerEnding();
+        SceneManager.LoadScene("EndGame");
     }
     
     /// <summary>

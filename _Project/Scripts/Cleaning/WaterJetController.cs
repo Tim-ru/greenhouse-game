@@ -15,6 +15,8 @@ public class WaterJetController : MonoBehaviour
     
     [Header("Visual Effects")]
     [SerializeField] private JetVFX vfx;
+    [SerializeField] private WaterTrailSystem trailSystem;
+    [SerializeField] private WaterDropletsEffect dropletsEffect;
     
     [Header("Input")]
     [SerializeField] private bool usePlayerInput = true;
@@ -96,9 +98,18 @@ public class WaterJetController : MonoBehaviour
         
         isFiring = fireInput;
         
-        if (!isFiring && vfx != null)
+        if (!isFiring)
         {
-            vfx.Hide();
+            if (vfx != null)
+            {
+                vfx.Hide();
+            }
+            
+            // Очищаем следы при остановке стрельбы
+            if (trailSystem != null)
+            {
+                trailSystem.ClearTrails();
+            }
         }
     }
     
@@ -139,7 +150,16 @@ public class WaterJetController : MonoBehaviour
         return transform.position;
     }
     
-    private void PerformRaycast()
+    /// <summary>
+    /// Принудительно активирует струю воды (для использования из HoseEquipment)
+    /// </summary>
+    public void ForceFire()
+    {
+        isFiring = true;
+        PerformRaycast();
+    }
+    
+    public void PerformRaycast()
     {
         if (!isFiring || mainCamera == null) return;
         
@@ -155,6 +175,12 @@ public class WaterJetController : MonoBehaviour
         
         if (hit.collider != null)
         {
+            // Добавляем след воды в точку попадания
+            if (trailSystem != null)
+            {
+                trailSystem.AddTrailAt(hit.point);
+            }
+            
             // Проверяем, есть ли компонент MoldSurface
             MoldSurface moldSurface = hit.collider.GetComponent<MoldSurface>();
             if (moldSurface != null)
@@ -164,6 +190,12 @@ public class WaterJetController : MonoBehaviour
                 {
                     moldSurface.EraseAtWorldPoint(hit.point);
                     lastPaintTime = Time.time;
+                    
+                    // Создаем эффект разлетающихся капель
+                    if (dropletsEffect != null)
+                    {
+                        dropletsEffect.CreateDropletsAt(hit.point, direction);
+                    }
                 }
                 
                 // Показываем визуальные эффекты
@@ -184,9 +216,16 @@ public class WaterJetController : MonoBehaviour
         else
         {
             // Не попали никуда - показываем струю до максимальной дистанции
+            Vector3 endPoint = nozzlePos + direction * distance;
+            
+            // Добавляем след воды в конечную точку
+            if (trailSystem != null)
+            {
+                trailSystem.AddTrailAt(endPoint);
+            }
+            
             if (vfx != null)
             {
-                Vector3 endPoint = nozzlePos + direction * distance;
                 vfx.DrawTo(endPoint);
             }
         }

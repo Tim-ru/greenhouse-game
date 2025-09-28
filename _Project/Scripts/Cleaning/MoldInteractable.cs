@@ -70,16 +70,16 @@ public class MoldInteractable : MonoBehaviour, IInteractable
         
         isBeingCleaned = true;
         
-        // Получаем компонент WaterJetController от взаимодействующего объекта
-        WaterJetController waterJet = interactor.GetComponent<WaterJetController>();
-        if (waterJet == null)
+        // Получаем компонент SimpleWaterController от взаимодействующего объекта
+        SimpleWaterController waterController = interactor.GetComponent<SimpleWaterController>();
+        if (waterController == null)
         {
-            // Если у взаимодействующего объекта нет WaterJetController, 
+            // Если у взаимодействующего объекта нет SimpleWaterController, 
             // создаем временный для очистки этой плесени
-            waterJet = interactor.AddComponent<WaterJetController>();
+            waterController = interactor.AddComponent<SimpleWaterController>();
             
-            // Настраиваем временный WaterJetController
-            SetupTemporaryWaterJet(waterJet, interactor);
+            // Настраиваем временный SimpleWaterController
+            SetupTemporaryWaterController(waterController, interactor);
         }
         
         // Расходуем воду из лейки
@@ -95,54 +95,14 @@ public class MoldInteractable : MonoBehaviour, IInteractable
         Debug.Log($"[MoldInteractable] Начата очистка плесени на {gameObject.name}");
     }
     
-    private void SetupTemporaryWaterJet(WaterJetController waterJet, GameObject interactor)
+    private void SetupTemporaryWaterController(SimpleWaterController waterController, GameObject interactor)
     {
-        // Создаем точку выхода воды (nozzle)
-        GameObject nozzle = new GameObject("TemporaryNozzle");
-        nozzle.transform.SetParent(interactor.transform);
-        nozzle.transform.localPosition = Vector3.up * 0.5f; // Немного выше персонажа
+        // SimpleWaterController автоматически создает свои эффекты
+        // Никакой дополнительной настройки не требуется
         
-        // Настраиваем WaterJetController
-        var nozzleField = typeof(WaterJetController).GetField("nozzle", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        nozzleField?.SetValue(waterJet, nozzle.transform);
-        
-        // Настраиваем слой для плесени
-        var moldMaskField = typeof(WaterJetController).GetField("moldMask", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        if (moldMaskField != null)
-        {
-            int moldLayer = gameObject.layer;
-            LayerMask moldMask = 1 << moldLayer;
-            moldMaskField.SetValue(waterJet, moldMask);
-        }
-        
-        // Настраиваем визуальные эффекты
-        SetupTemporaryVFX(waterJet, nozzle);
-        
-        Debug.Log($"[MoldInteractable] Настроен временный WaterJetController для {gameObject.name}");
+        Debug.Log($"[MoldInteractable] Настроен временный SimpleWaterController для {gameObject.name}");
     }
     
-    private void SetupTemporaryVFX(WaterJetController waterJet, GameObject nozzle)
-    {
-        // Создаем временный VFX объект
-        GameObject vfxObject = new GameObject("TemporaryJetVFX");
-        vfxObject.transform.SetParent(nozzle.transform);
-        
-        // Добавляем LineRenderer и JetVFX
-        LineRenderer lineRenderer = vfxObject.AddComponent<LineRenderer>();
-        JetVFX jetVFX = vfxObject.AddComponent<JetVFX>();
-        
-        // Настраиваем ссылку в WaterJetController
-        var vfxField = typeof(WaterJetController).GetField("vfx", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        vfxField?.SetValue(waterJet, jetVFX);
-        
-        // Настраиваем nozzle в JetVFX
-        var nozzleField = typeof(JetVFX).GetField("nozzle", 
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        nozzleField?.SetValue(jetVFX, nozzle.transform);
-    }
     
     /// <summary>
     /// Останавливает процесс очистки

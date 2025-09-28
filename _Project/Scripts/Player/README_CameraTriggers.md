@@ -115,3 +115,4 @@ Vector3 targetPos = cameraController.TargetPosition;
 1. Убедитесь, что у игрока есть тег "Player"
 2. Проверьте, что триггеры имеют правильные размеры и позиции
 3. Убедитесь, что CameraController назначен на Main Camera
+

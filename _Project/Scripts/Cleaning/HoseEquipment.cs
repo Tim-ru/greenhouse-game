@@ -21,7 +21,7 @@ public class HoseEquipment : MonoBehaviour
     private HoseInteractable originalHose;
     private SpriteRenderer spriteRenderer;
     private Sprite originalSprite;
-    private WaterJetController waterJetController;
+    private SimpleWaterController waterController;
     private JetVFX jetVFX;
     private Camera mainCamera;
     private float lastPaintTime;
@@ -100,8 +100,24 @@ public class HoseEquipment : MonoBehaviour
         nozzle.transform.SetParent(transform);
         nozzle.transform.localPosition = hoseOffset;
         
+        // Добавляем SimpleWaterController
+        waterController = gameObject.AddComponent<SimpleWaterController>();
+        SetupWaterController();
+        
         // Создаем визуальные эффекты
         CreateVFXComponents(nozzle);
+    }
+    
+    private void SetupWaterController()
+    {
+        if (waterController == null) return;
+        
+        // Настраиваем радиус полива равный дальности шланга
+        var wateringRangeField = typeof(SimpleWaterController).GetField("wateringRange", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        wateringRangeField?.SetValue(waterController, hoseRange);
+        
+        Debug.Log("[HoseEquipment] SimpleWaterController настроен с радиусом полива: " + hoseRange);
     }
     
     private void CreateVFXComponents(GameObject nozzle)
@@ -116,22 +132,30 @@ public class HoseEquipment : MonoBehaviour
         
         // Настраиваем LineRenderer для шланга
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        // lineRenderer.color = Color.blue;
         lineRenderer.startWidth = 0.15f;
         lineRenderer.endWidth = 0.1f;
         lineRenderer.sortingOrder = 15; // Поверх других объектов
-        
-        // Сохраняем ссылку на VFX
-        // jetVFX уже сохранен в переменной класса
         
         // Настраиваем nozzle в JetVFX
         var nozzleField = typeof(JetVFX).GetField("nozzle", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         nozzleField?.SetValue(jetVFX, nozzle.transform);
+        
+        // SimpleWaterController автоматически создает свои эффекты
+        
+        Debug.Log("[HoseEquipment] VFX компоненты созданы");
     }
+    
     
     private void DestroyWaterJetComponents()
     {
+        // Уничтожаем SimpleWaterController
+        if (waterController != null)
+        {
+            DestroyImmediate(waterController);
+            waterController = null;
+        }
+        
         if (jetVFX != null)
         {
             DestroyImmediate(jetVFX.gameObject);
@@ -148,93 +172,10 @@ public class HoseEquipment : MonoBehaviour
     
     private void HandleHoseInput()
     {
-        // Проверяем наличие воды в лейке
-        if (InventorySystem.Instance != null && InventorySystem.Instance.HasWateringCan)
-        {
-            var wateringCan = InventorySystem.Instance.GetWateringCan();
-            if (wateringCan != null && wateringCan.HasWater)
-            {
-                // Вода есть - активируем шланг при зажатой ЛКМ
-                bool fireInput = GetFireInput();
-                if (fireInput)
-                {
-                    Debug.Log($"[HoseEquipment] Fire input detected, time since last paint: {Time.time - lastPaintTime}");
-                    
-                    if (Time.time - lastPaintTime >= paintInterval)
-                    {
-                        Debug.Log("[HoseEquipment] Paint interval passed, performing raycast");
-                        
-                        // Расходуем воду
-                        wateringCan.UseWater(waterConsumption);
-                        lastPaintTime = Time.time;
-                        
-                        // Выполняем raycast для очистки плесени
-                        PerformHoseRaycast();
-                    }
-                }
-            }
-            else
-            {
-                Debug.Log("[HoseEquipment] Watering can has no water");
-            }
-        }
-        else
-        {
-            Debug.Log("[HoseEquipment] No watering can in inventory");
-        }
+        // SimpleWaterController автоматически обрабатывает ввод
+        // Здесь можно добавить дополнительную логику, если нужно
     }
     
-    private void PerformHoseRaycast()
-    {
-        if (mainCamera == null) 
-        {
-            Debug.Log("[HoseEquipment] mainCamera == null");
-            return;
-        }
-        
-        // Получаем позицию курсора в мировых координатах
-        Vector3 mouseWorldPos = GetMouseWorldPosition();
-        mouseWorldPos.z = 0f;
-        
-        Debug.Log($"[HoseEquipment] Mouse world position: {mouseWorldPos}");
-        
-        // Ищем все объекты плесени в сцене
-        MoldSurface[] allMoldSurfaces = FindObjectsOfType<MoldSurface>();
-        
-        foreach (MoldSurface moldSurface in allMoldSurfaces)
-        {
-            // Проверяем, находится ли курсор в пределах плесени
-            if (IsPointInsideMold(moldSurface, mouseWorldPos))
-            {
-                Debug.Log($"[HoseEquipment] Mouse inside mold {moldSurface.name}, erasing at {mouseWorldPos}");
-                moldSurface.EraseAtWorldPoint(mouseWorldPos);
-                
-                // Проверяем результат
-                float cleanPercent = moldSurface.GetCleanPercent();
-                Debug.Log($"[HoseEquipment] Clean percent after erase: {cleanPercent:P1}");
-                break; // Обрабатываем только одну плесень за раз
-            }
-        }
-    }
-    
-    /// <summary>
-    /// Проверяет, находится ли точка внутри плесени
-    /// </summary>
-    private bool IsPointInsideMold(MoldSurface moldSurface, Vector3 worldPoint)
-    {
-        SpriteRenderer spriteRenderer = moldSurface.GetComponent<SpriteRenderer>();
-        if (spriteRenderer == null || spriteRenderer.sprite == null) return false;
-        
-        // Получаем границы спрайта
-        Bounds spriteBounds = spriteRenderer.bounds;
-        
-        // Проверяем, находится ли точка внутри границ
-        bool isInside = spriteBounds.Contains(worldPoint);
-        
-        Debug.Log($"[HoseEquipment] Point {worldPoint} inside {moldSurface.name} bounds {spriteBounds}: {isInside}");
-        
-        return isInside;
-    }
     
     private bool GetFireInput()
     {

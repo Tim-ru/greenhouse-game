@@ -1,13 +1,19 @@
 using UnityEngine;
 
 /// <summary>
-/// Компонент для движения персонажа с ограничением по Y-координате в стиле bitmap
+/// Компонент для движения одноколесного робота с плавным замедлением и инерцией
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class BeltMover : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float speed = 4f;
+    [SerializeField] private float maxSpeed = 4f;
+    [SerializeField] private float acceleration = 8f;
+    [SerializeField] private float deceleration = 6f;
+    
+    [Header("Friction Settings")]
+    [SerializeField] private float friction = 0.9f;
+    [SerializeField] private float airResistance = 0.95f;
     
     [Header("Walk Area Constraints")]
     [SerializeField] private Vector2 walkYRange = new Vector2(-1.5f, -0.2f);
@@ -15,12 +21,15 @@ public class BeltMover : MonoBehaviour
     
     private Rigidbody2D rb;
     private Vector2 input;
+    private Vector2 currentVelocity;
+    private Vector2 targetVelocity;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;
         rb.freezeRotation = true;
+        currentVelocity = Vector2.zero;
     }
 
     /// <summary>
@@ -35,8 +44,29 @@ public class BeltMover : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Вычисляем целевую скорость на основе ввода
+        targetVelocity = input * maxSpeed;
+        
+        // Плавно изменяем скорость с учетом ускорения/замедления
+        if (input.magnitude > 0.1f)
+        {
+            // Ускорение при наличии ввода
+            currentVelocity = Vector2.MoveTowards(currentVelocity, targetVelocity, 
+                acceleration * Time.fixedDeltaTime);
+        }
+        else
+        {
+            // Плавное замедление при отсутствии ввода
+            currentVelocity = Vector2.MoveTowards(currentVelocity, Vector2.zero, 
+                deceleration * Time.fixedDeltaTime);
+        }
+        
+        // Применяем трение и сопротивление воздуха
+        currentVelocity *= friction;
+        currentVelocity *= airResistance;
+        
         // Вычисляем новую позицию
-        Vector2 newPosition = rb.position + input * speed * Time.fixedDeltaTime;
+        Vector2 newPosition = rb.position + currentVelocity * Time.fixedDeltaTime;
         
         // Ограничиваем Y-координату в пределах заданного диапазона
         newPosition.y = Mathf.Clamp(newPosition.y, walkYRange.x, walkYRange.y);
@@ -90,6 +120,57 @@ public class BeltMover : MonoBehaviour
     /// Получает текущие границы области ходьбы по X
     /// </summary>
     public Vector2 GetWalkAreaBoundsX() => walkXRange;
+    
+    /// <summary>
+    /// Получает текущую скорость движения
+    /// </summary>
+    public Vector2 GetCurrentVelocity() => currentVelocity;
+    
+    /// <summary>
+    /// Получает текущую скорость движения (магнитуда)
+    /// </summary>
+    public float GetCurrentSpeed() => currentVelocity.magnitude;
+    
+    /// <summary>
+    /// Устанавливает параметры движения
+    /// </summary>
+    /// <param name="maxSpeed">Максимальная скорость</param>
+    /// <param name="acceleration">Ускорение</param>
+    /// <param name="deceleration">Замедление</param>
+    public void SetMovementSettings(float maxSpeed, float acceleration, float deceleration)
+    {
+        this.maxSpeed = maxSpeed;
+        this.acceleration = acceleration;
+        this.deceleration = deceleration;
+    }
+    
+    /// <summary>
+    /// Устанавливает параметры трения
+    /// </summary>
+    /// <param name="friction">Трение (0-1, где 1 = нет трения)</param>
+    /// <param name="airResistance">Сопротивление воздуха (0-1, где 1 = нет сопротивления)</param>
+    public void SetFrictionSettings(float friction, float airResistance)
+    {
+        this.friction = Mathf.Clamp01(friction);
+        this.airResistance = Mathf.Clamp01(airResistance);
+    }
+    
+    /// <summary>
+    /// Принудительно останавливает робота
+    /// </summary>
+    public void Stop()
+    {
+        currentVelocity = Vector2.zero;
+    }
+    
+    /// <summary>
+    /// Применяет импульс к роботу (например, от взрыва или толчка)
+    /// </summary>
+    /// <param name="impulse">Вектор импульса</param>
+    public void ApplyImpulse(Vector2 impulse)
+    {
+        currentVelocity += impulse;
+    }
 
     private void OnDrawGizmosSelected()
     {
@@ -106,5 +187,22 @@ public class BeltMover : MonoBehaviour
             0.1f
         );
         Gizmos.DrawWireCube(center, size);
+        
+        // Визуализация текущей скорости
+        if (Application.isPlaying && currentVelocity.magnitude > 0.1f)
+        {
+            Gizmos.color = Color.red;
+            Vector3 velocityEnd = transform.position + (Vector3)currentVelocity * 0.5f;
+            Gizmos.DrawLine(transform.position, velocityEnd);
+            
+            // Стрелка направления
+            Vector3 direction = currentVelocity.normalized;
+            Vector3 arrowHead = velocityEnd - direction * 0.2f;
+            Vector3 arrowLeft = arrowHead + new Vector3(-direction.y, direction.x, 0) * 0.1f;
+            Vector3 arrowRight = arrowHead + new Vector3(direction.y, -direction.x, 0) * 0.1f;
+            
+            Gizmos.DrawLine(velocityEnd, arrowLeft);
+            Gizmos.DrawLine(velocityEnd, arrowRight);
+        }
     }
 }

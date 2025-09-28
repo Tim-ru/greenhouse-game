@@ -118,3 +118,4 @@ public class CameraTriggerSetup : MonoBehaviour
         Debug.Log("[CameraTriggerSetup] Все триггеры камеры удалены!");
     }
 }
+
