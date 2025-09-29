@@ -5,7 +5,7 @@ public class PotData : ScriptableObject
 {
     [Header("Visual Settings")]
     public Sprite emptyPotSprite;
-    public Sprite potWithPlantSprite;
+    // potWithPlantSprite убран - растения рендерятся отдельно поверх горшка
     
     [Header("Watering Settings")]
     public float waterCapacity = 1f; // максимальное количество воды

@@ -16,6 +16,7 @@ public class PlantData : ScriptableObject
     [Header("Visual Settings")]
     public Sprite[] stageSprites; // 0..N
     public float[] stageThresholds = { 0.2f, 0.5f, 0.8f, 1.0f }; // суммарный прогресс 0..1
+    public float plantScale = 1.5f; // Размер растения (можно настроить для каждого типа)
     
     [Header("Watering Settings")]
     public float waterConsumptionRate = 0.02f; // Снижаем потребление воды с 0.1 до 0.02

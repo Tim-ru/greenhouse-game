@@ -6041,6 +6041,89 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1313922466}
   m_CullTransparentMesh: 1
+--- !u!1 &1314241793
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1314241795}
+  - component: {fileID: 1314241794}
+  - component: {fileID: 1314241796}
+  - component: {fileID: 1314241797}
+  - component: {fileID: 1314241798}
+  m_Layer: 0
+  m_Name: MoldPrefabCreator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1314241794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314241793}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57765be945a19432980423645c08dcbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MoldPrefabCreator
+--- !u!4 &1314241795
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314241793}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 173.95453, y: 140.70148, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1314241796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314241793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 070a4c41b3d0c447bbdd7c131999c0f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HosePrefabCreator
+--- !u!114 &1314241797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314241793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cf8311181d77411b8f872522429e2bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoseTestCreator
+--- !u!114 &1314241798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314241793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92999e3dcb34d401f9f49a85af1009a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SceneSetupHelper
 --- !u!1 &1338738564
 GameObject:
   m_ObjectHideFlags: 0
@@ -6575,7 +6658,6 @@ GameObject:
   - component: {fileID: 1381779422}
   - component: {fileID: 1381779421}
   - component: {fileID: 1381779420}
-  - component: {fileID: 1381779424}
   m_Layer: 3
   m_Name: WaterRefiller
   m_TagString: Untagged
@@ -6720,22 +6802,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1381779424
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1381779419}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba8d61b21dcde4ea9908167f032a0385, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BuildDiagnostics
-  runOnStart: 1
-  checkMissingReferences: 1
-  checkMissingComponents: 1
-  checkScriptCompilation: 1
 --- !u!1 &1430583690
 GameObject:
   m_ObjectHideFlags: 0
@@ -10356,6 +10422,7 @@ SceneRoots:
   - {fileID: 1438970779}
   - {fileID: 517953974}
   - {fileID: 889406381}
+  - {fileID: 1314241795}
   - {fileID: 1691538897}
   - {fileID: 1174917459}
   - {fileID: 1281582376}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<linker>
+  <!-- Сохраняем все типы из наших скриптов -->
+  <assembly fullname="Assembly-CSharp">
+    <namespace fullname="*" preserve="all"/>
+    <type fullname="*" preserve="all"/>
+  </assembly>
+  
+  <!-- Сохраняем Input System -->
+  <assembly fullname="Unity.InputSystem">
+    <namespace fullname="*" preserve="all"/>
+  </assembly>
+  
+  <!-- Сохраняем TextMeshPro -->
+  <assembly fullname="Unity.TextMeshPro">
+    <namespace fullname="*" preserve="all"/>
+  </assembly>
+  
+  <!-- Сохраняем URP -->
+  <assembly fullname="Unity.RenderPipelines.Universal.Runtime">
+    <namespace fullname="*" preserve="all"/>
+  </assembly>
+  
+  <!-- Сохраняем основные Unity модули -->
+  <assembly fullname="UnityEngine.CoreModule">
+    <namespace fullname="UnityEngine" preserve="all"/>
+  </assembly>
+  
+  <assembly fullname="UnityEngine.UI">
+    <namespace fullname="UnityEngine.UI" preserve="all"/>
+  </assembly>
+  
+  <assembly fullname="UnityEngine.Physics2DModule">
+    <namespace fullname="UnityEngine" preserve="all"/>
+  </assembly>
+  
+  <assembly fullname="UnityEngine.AudioModule">
+    <namespace fullname="UnityEngine" preserve="all"/>
+  </assembly>
+  
+  <assembly fullname="UnityEngine.AnimationModule">
+    <namespace fullname="UnityEngine" preserve="all"/>
+  </assembly>
+</linker>

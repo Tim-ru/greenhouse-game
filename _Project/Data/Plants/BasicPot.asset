@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa6149ef6f95a464fa5c6a1e08fa6834, type: 3}
   m_Name: BasicPot
   m_EditorClassIdentifier: Assembly-CSharp::PotData
-  emptyPotSprite: {fileID: -3337038689812066966, guid: 773da2aa986454bf2a4dea6a8430348c, type: 3}
-  potWithPlantSprite: {fileID: -3337038689812066966, guid: 773da2aa986454bf2a4dea6a8430348c, type: 3}
+  emptyPotSprite: {fileID: -6208614325355709334, guid: 0b6e8c8c7a3e24e8b888363b3e5629d1, type: 3}
   waterCapacity: 1
   waterRefillAmount: 0.5
   waterRetentionTime: 10
