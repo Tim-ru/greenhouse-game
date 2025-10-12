@@ -13,7 +13,6 @@ public class UnicycleRobotController : MonoBehaviour
     
     [Header("Wheel Physics")]
     [SerializeField] private float wheelRadius = 0.5f;
-    [SerializeField] private float wheelMass = 1f;
     [SerializeField] private float wheelInertia = 0.5f;
     
     [Header("Visual Settings")]

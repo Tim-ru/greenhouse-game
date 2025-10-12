@@ -17,6 +17,7 @@ public class HoseInteractable : MonoBehaviour, IInteractable
     
     private bool isHoseInUse = false;
     private GameObject currentUser;
+    private bool isReturning = false; // Флаг для предотвращения рекурсии
     
     public string Prompt => isHoseInUse ? promptTextInUse : promptText;
     
@@ -45,7 +46,8 @@ public class HoseInteractable : MonoBehaviour, IInteractable
     /// </summary>
     public void Interact(GameObject interactor)
     {
-        if (!CanInteract(interactor)) return;
+        // Примечание: CanInteract() уже проверяется в InteractionDetector перед вызовом Interact()
+        // Повторная проверка здесь вызывала StackOverflowException из-за рекурсивных вызовов
         
         // Получаем компонент HoseEquipment у игрока
         HoseEquipment hoseEquipment = interactor.GetComponent<HoseEquipment>();
@@ -110,22 +112,22 @@ public class HoseInteractable : MonoBehaviour, IInteractable
     /// </summary>
     public void ForceReturnHose()
     {
-        if (currentUser != null)
-        {
-            HoseEquipment hoseEquipment = currentUser.GetComponent<HoseEquipment>();
-            if (hoseEquipment != null)
-            {
-                hoseEquipment.UnequipHose();
-            }
-        }
+        // Защита от рекурсии
+        if (isReturning) return;
         
+        isReturning = true;
+        
+        // Сбрасываем состояние
         isHoseInUse = false;
         currentUser = null;
         
+        // Показываем визуальный объект шланга
         if (hoseVisual != null)
         {
             hoseVisual.SetActive(true);
         }
+        
+        isReturning = false;
         
         Debug.Log("[HoseInteractable] Шланг принудительно возвращен");
     }

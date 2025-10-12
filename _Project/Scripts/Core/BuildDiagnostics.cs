@@ -146,3 +146,5 @@ public class BuildDiagnostics : MonoBehaviour
             UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 }
+
+

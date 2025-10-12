@@ -14,8 +14,6 @@ public class InventoryTester : MonoBehaviour
     
     [Header("Test Seeds")]
     [SerializeField] private int tomatoSeeds = 3;
-    [SerializeField] private int carrotSeeds = 2;
-    [SerializeField] private int lettuceSeeds = 1;
     
     void Start()
     {

@@ -12,7 +12,6 @@ public class HoseEquipment : MonoBehaviour
     [SerializeField] private float hoseRange = 8f; // Дальность шланга
     [SerializeField] private LayerMask moldMask = 1 << 6; // Слой объектов с плесенью (слой 6)
     [SerializeField] private float paintInterval = 0.01f; // Интервал между стираниями
-    [SerializeField] private float waterConsumption = 0.5f; // Расход воды за стирание
     
     [Header("Visual Settings")]
     [SerializeField] private Sprite hoseSprite; // Спрайт шланга в руках
@@ -81,14 +80,17 @@ public class HoseEquipment : MonoBehaviour
         // Уничтожаем компоненты струи воды
         DestroyWaterJetComponents();
         
-        // Возвращаем шланг обратно
-        if (originalHose != null)
-        {
-            originalHose.ForceReturnHose();
-        }
+        // Сохраняем ссылку на шланг перед сбросом
+        HoseInteractable hoseToNotify = originalHose;
         
         isEquipped = false;
         originalHose = null;
+        
+        // Уведомляем шланг о возврате (ForceReturnHose имеет защиту от рекурсии)
+        if (hoseToNotify != null)
+        {
+            hoseToNotify.ForceReturnHose();
+        }
         
         Debug.Log($"[HoseEquipment] Шланг снят игроком {gameObject.name}");
     }
