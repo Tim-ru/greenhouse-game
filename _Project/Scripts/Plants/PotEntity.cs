@@ -217,7 +217,9 @@ public class PotEntity : MonoBehaviour, IInteractable
             GameObject plantObj = new GameObject("Plant");
             plantObj.transform.SetParent(plantPosition);
             plantObj.transform.localPosition = Vector3.zero;
-            plantObj.transform.localScale = Vector3.one * 2f; // Увеличиваем размер растения
+            // Устанавливаем размер растения из PlantData
+            float plantScale = plantData?.plantScale ?? 1.5f;
+            plantObj.transform.localScale = Vector3.one * plantScale;
             
             // Добавляем SpriteRenderer для растения
             var plantSpriteRenderer = plantObj.AddComponent<SpriteRenderer>();
@@ -390,13 +392,24 @@ public class PotEntity : MonoBehaviour, IInteractable
     
     private void UpdateVisuals()
     {
-        if (data == null) return;
+        if (data == null) 
+        {
+            Debug.LogWarning($"[PotEntity] {gameObject.name} - PotData is null, cannot update visuals");
+            return;
+        }
         
-        // Обновляем спрайт горшка
-        spriteRenderer.sprite = hasPlant ? data.potWithPlantSprite : data.emptyPotSprite;
+        // Горшок всегда использует один и тот же спрайт (пустой горшок)
+        // Растения рендерятся отдельно поверх горшка
+        if (data.emptyPotSprite == null)
+        {
+            Debug.LogWarning($"[PotEntity] {gameObject.name} - emptyPotSprite is null!");
+            return;
+        }
         
-        // Убеждаемся, что горшок имеет низкий sorting order
-        spriteRenderer.sortingOrder = 0;
+        spriteRenderer.sprite = data.emptyPotSprite;
+        
+        // Устанавливаем правильный sorting order для горшка (низкий, чтобы быть под растениями)
+        spriteRenderer.sortingOrder = 1;
         
         // Можно добавить визуальные эффекты воды
         Color color = spriteRenderer.color;
